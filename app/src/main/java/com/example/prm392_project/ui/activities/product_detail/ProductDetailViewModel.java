@@ -45,7 +45,7 @@ public class ProductDetailViewModel extends ViewModel {
     public void getProductDetail( String id, ProductCallback callback) {
         executorService.execute(() -> {
             try {
-                retrofit2.Response<Product> response = repository.getProductById( id).execute();
+                retrofit2.Response<Product> response = repository.getProductById(id).execute();
                 if (response.isSuccessful() && response.body() != null) {
                     callback.onResult(response.body());
                 } else {

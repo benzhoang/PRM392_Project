@@ -1,5 +1,6 @@
 package com.example.prm392_project.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.prm392_project.R;
 import com.example.prm392_project.databinding.ActivityMainBinding;
+import com.example.prm392_project.util.SharedPrefUtils;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -25,6 +27,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        boolean isLogin = SharedPrefUtils.getBoolean(this, "isLogin", false);
+        if (!isLogin) {
+            // Nếu chưa đăng nhập, chuyển sang AuthActivity
+            startActivity(new Intent(this, com.example.prm392_project.ui.activities.auth.AuthActivity.class));
+            finish(); // Không cho vào MainActivity nữa
+            return;
+        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

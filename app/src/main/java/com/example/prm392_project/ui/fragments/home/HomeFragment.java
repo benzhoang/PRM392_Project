@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
                                 ProductAdapter productAdapter = new ProductAdapter();
                                 productAdapter.differ.submitList(products);
                                 productAdapter.setOnItemClickListener(product -> {
-                                    intentToProductDetailActivity(product.getId(), bearerToken, product.getCategoryId());
+                                    intentToProductDetailActivity(String.valueOf(product.getId()), bearerToken, product.getCategoryId());
                                 });
                                 binding.productRv.setAdapter(productAdapter);
                             }
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
                                 ProductAdapter productAdapter = new ProductAdapter();
                                 productAdapter.differ.submitList(products);
                                 productAdapter.setOnItemClickListener(product -> {
-                                    intentToProductDetailActivity(product.getId(), bearerToken, product.getCategoryId());
+                                    intentToProductDetailActivity(String.valueOf(product.getId()), bearerToken, product.getCategoryId());
                                 });
                                 binding.productRv.setAdapter(productAdapter);
                             }
@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment {
                     ProductAdapter productAdapter = new ProductAdapter();
                     productAdapter.differ.submitList(products);
                     productAdapter.setOnItemClickListener(product -> {
-                        intentToProductDetailActivity(product.getId(), bearerToken, product.getCategoryId());
+                        intentToProductDetailActivity(String.valueOf(product.getId()), bearerToken, product.getCategoryId());
                     });
                     binding.productRv.setAdapter(productAdapter);
                 }

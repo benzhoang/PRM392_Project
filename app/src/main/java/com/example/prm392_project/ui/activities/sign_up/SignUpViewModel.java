@@ -30,28 +30,41 @@ public class SignUpViewModel extends ViewModel {
     }
 
     public interface SignUpCallback {
-        void onResult(SignUpResponse response);
+        void onResult(SignUpResponse response, String errorMessage);
     }
 
-    public void signUpUser(String email, String password, String firstName, String lastName,
-                           String birthDate, String address, String phoneNumber,
-                           SignUpCallback callback) {
+    public void signUpUser(String email, String password, String name, SignUpCallback callback) {
         executorService.execute(() -> {
             try {
-                // Gọi API hoặc repository ở đây...
-                // Nếu repo trả về Call<SignUpResponse>, nhớ .execute() để lấy response thật
                 Response<SignUpResponse> response = repository.signUp(
-                        new SignUpRequest(email, password, firstName, lastName, birthDate, address, phoneNumber)
+                        new SignUpRequest(email, password, name)
                 ).execute();
                 if (response.isSuccessful() && response.body() != null) {
                     SignUpResponse signUpResponse = response.body();
-                    // Gọi callback trên main thread
-                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> callback.onResult(signUpResponse));
+                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() ->
+                            callback.onResult(signUpResponse, null)
+                    );
                 } else {
-                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> callback.onResult(null));
+                    // Lấy message lỗi từ response.errorBody()
+                    String errorMessage = "Error signing up";
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorJson = response.errorBody().string();
+                            org.json.JSONObject jsonObject = new org.json.JSONObject(errorJson);
+                            errorMessage = jsonObject.optString("message", errorMessage);
+                        }
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                    String finalErrorMessage = errorMessage;
+                    new android.os.Handler(android.os.Looper.getMainLooper()).post(() ->
+                            callback.onResult(null, finalErrorMessage)
+                    );
                 }
             } catch (Exception e) {
-                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> callback.onResult(null));
+                new android.os.Handler(android.os.Looper.getMainLooper()).post(() ->
+                        callback.onResult(null, "Lỗi kết nối server")
+                );
             }
         });
     }

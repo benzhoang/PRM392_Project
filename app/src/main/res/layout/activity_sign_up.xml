@@ -139,65 +139,11 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/address_til"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_til">
 
-            <EditText
-                android:id="@+id/address_et"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_location"
-                android:drawablePadding="16dp"
-                android:hint="Address"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phone_til"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/address_til">
 
-            <EditText
-                android:id="@+id/phone_et"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_telephone"
-                android:drawablePadding="16dp"
-                android:hint="Phone"
-                android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/date_til"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/phone_til">
 
-            <EditText
-                android:id="@+id/date_et"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="16dp"
-                android:focusable="false"
-                android:hint="Date of Birth"
-                android:inputType="date"
-                android:textAlignment="center" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
             android:id="@+id/get_update_cb"
@@ -210,7 +156,7 @@
             android:text="@string/sign_up_for_emails_to_get_updates_nfrom_cosmetic_on_products_offers_nand_your_meber_benefits"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date_til" />
+            app:layout_constraintTop_toBottomOf="@id/password_til" />
 
         <CheckBox
             android:id="@+id/agree_cb"

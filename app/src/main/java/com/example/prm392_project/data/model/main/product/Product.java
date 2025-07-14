@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Product {
     @SerializedName("product_id")
-    private String id;
+    private int id;
 
     private String name;
     private String description;
@@ -41,11 +41,11 @@ public class Product {
         this.name = name;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -125,7 +125,7 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public Product(String id, String name, String description, double price, String brand, String skinType, String imageUrl,
+    public Product(int id, String name, String description, double price, String brand, String skinType, String imageUrl,
                    int stockQuantity, String categoryId, String barcode, String createdAt, String updatedAt) {
         this.id = id;
         this.name = name;

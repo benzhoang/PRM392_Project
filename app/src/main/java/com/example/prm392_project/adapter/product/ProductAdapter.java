@@ -50,7 +50,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private final DiffUtil.ItemCallback<Product> differCallback = new DiffUtil.ItemCallback<Product>() {
         @Override
         public boolean areItemsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override

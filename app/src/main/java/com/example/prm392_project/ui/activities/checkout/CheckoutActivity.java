@@ -39,21 +39,13 @@ public class CheckoutActivity extends AppCompatActivity {
             return insets;
         });
 
-        email = SharedPrefUtils.getString(this, "email", "");
-        phoneNumber = SharedPrefUtils.getString(this, "phoneNumber", "");
-        address = SharedPrefUtils.getString(this, "address", "");
-
         String totalStr = getIntent().getStringExtra("total");
         double total = totalStr != null ? Double.parseDouble(totalStr) : 0;
         double shippingFee = total * 0.1;
         String token = getIntent().getStringExtra("token");
 
-        binding.tvShippingFeeValue.setText("$ " + shippingFee);
         binding.tvTotalQuantityValue.setText("$ " + total);
         binding.tvTotalValue.setText("$ " + (total + shippingFee));
-        binding.emailTv.setText(email);
-        binding.phoneTv.setText(phoneNumber);
-        binding.addressTv.setText(address);
 
         binding.editEmailIv.setOnClickListener(v -> {
             showEditDialog("Edit Email", email, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS, R.drawable.ic_email, value -> {

@@ -78,7 +78,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private static final DiffUtil.ItemCallback<Product> DIFF_CALLBACK = new DiffUtil.ItemCallback<Product>() {
         @Override
         public boolean areItemsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
-            return oldItem.getId().equals(newItem.getId());
+            return oldItem.getId() == newItem.getId();
         }
 
         @Override

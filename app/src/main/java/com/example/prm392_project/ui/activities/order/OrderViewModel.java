@@ -5,8 +5,10 @@ import android.util.Log;
 import androidx.lifecycle.ViewModel;
 
 import com.example.prm392_project.data.model.main.order.Order;
+import com.example.prm392_project.data.model.main.order.OrderResponse;
 import com.example.prm392_project.data.model.main.product.Product;
 import com.example.prm392_project.data.repository.CosmeticsRepository;
+import com.example.prm392_project.ui.fragments.cart.CartViewModel;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -14,6 +16,9 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class OrderViewModel extends ViewModel {
 
     private final CosmeticsRepository cosmeticsRepository;
@@ -35,14 +40,17 @@ public class OrderViewModel extends ViewModel {
 
     // --- API calls with callbacks (equivalent to coroutine launch) ---
 
-    public void createOrderOrder(String token, Order order, BooleanCallback callback) {
+    public void createOrder(String token, Map<String, Object> body, CartViewModel.CreateOrderCallback callback) {
         executorService.execute(() -> {
             try {
-                cosmeticsRepository.createOrder(token, order);
-                callback.onResult(true);
+                retrofit2.Response<OrderResponse> response = cosmeticsRepository.createOrder(token, body).execute();
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onResult(response.body());
+                } else {
+                    callback.onResult(null);
+                }
             } catch (Exception e) {
-                Log.e("OrderViewModel", "Error creating order: " + e.getMessage());
-                callback.onResult(false);
+                callback.onResult(null);
             }
         });
     }

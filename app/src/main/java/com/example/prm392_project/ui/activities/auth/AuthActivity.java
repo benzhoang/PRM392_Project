@@ -35,12 +35,13 @@ public class AuthActivity extends AppCompatActivity {
             });
         }
 
-        binding.joinUsBtn.setOnClickListener(v -> navigateToCheckAccountActivity());
-        binding.signInBtn.setOnClickListener(v -> navigateToCheckAccountActivity());
+        binding.signInBtn.setOnClickListener(v -> navigateToCheckAccountActivity("login"));
+        binding.joinUsBtn.setOnClickListener(v -> navigateToCheckAccountActivity("register"));
     }
 
-    private void navigateToCheckAccountActivity() {
+    private void navigateToCheckAccountActivity(String mode) {
         Intent intent = new Intent(this, CheckAccountActivity.class);
+        intent.putExtra("mode", mode); // Truyền "login" hoặc "register"
         startActivity(intent);
     }
 }

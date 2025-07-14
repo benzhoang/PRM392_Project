@@ -153,20 +153,7 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/select_size_btn"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/white_button"
-                android:drawableEnd="@drawable/ic_arrow_down"
-                android:paddingHorizontal="16dp"
-                android:text="Size EU 42.5"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp" />
+
 
             <Button
                 android:id="@+id/add_to_bag_btn"
@@ -176,7 +163,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/white_button"
                 android:paddingHorizontal="16dp"
-                android:text="Add to Bag"
+                android:text="Thêm vào giỏ hàng"
                 android:textAllCaps="false"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp" />
@@ -197,7 +184,7 @@
                     android:id="@+id/reviews_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rating"
+                    android:text="Đánh giá"
                     android:textSize="25sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -242,31 +229,7 @@
                 android:layout_marginVertical="20dp"
                 android:background="#c0c0c0" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="60dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="You may also like"
-                    android:textColor="@color/static_black"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/related_products_rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_product" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

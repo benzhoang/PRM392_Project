@@ -3,6 +3,7 @@ package com.example.prm392_project.ui.activities.product_detail;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -68,59 +69,108 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         binding.backButton.setOnClickListener(v -> onBackPressed());
 
-        String id = getIntent().getStringExtra("id");
+        int id = getIntent().getIntExtra("id", -1);
+        Log.d("ProductDetailActivity", "Received id: " + id);
         String token = getIntent().getStringExtra("token");
-        userId = SharedPrefUtils.getString(this, "id", "");
+        userId = SharedPrefUtils.getString(this, "userId", "");
 
-        binding.selectSizeBtn.setOnClickListener(v -> {
 
-        });
 
         binding.addToBagBtn.setOnClickListener(v -> {
+            int newQuantity = 1;
+            try {
+                // Đọc danh sách cart hiện tại
+                String cartJson = SharedPrefUtils.getString(this, "cart_items", "[]");
+                if (cartJson == null || cartJson.trim().isEmpty()) cartJson = "[]";
+                org.json.JSONArray array = new org.json.JSONArray(cartJson);
 
+                boolean existed = false;
+                for (int i = 0; i < array.length(); i++) {
+                    org.json.JSONObject obj = array.getJSONObject(i);
+                    if (obj.optInt("product_id", -1) == id) {
+                        newQuantity = obj.optInt("quantity", 0) + 1;
+                        obj.put("quantity", newQuantity);
+                        array.put(i, obj);
+                        existed = true;
+                        break;
+                    }
+                }
+                if (!existed) {
+                    org.json.JSONObject obj = new org.json.JSONObject();
+                    obj.put("product_id", id);
+                    obj.put("quantity", 1);
+                    array.put(obj);
+                    newQuantity = 1;
+                }
+
+                SharedPrefUtils.saveString(this, "cart_items", array.toString());
+
+                // Hiển thị popup thông báo
+                PopupDialog.getInstance(this)
+                        .setStyle(Styles.SUCCESS)
+                        .setHeading("Đã thêm vào giỏ hàng!")
+                        .setDescription("Số lượng hiện tại của sản phẩm này: " + newQuantity)
+                        .setDismissButtonText("Ok")
+                        .setCancelable(false)
+                        .showDialog(new OnDialogButtonClickListener() {
+                            @Override
+                            public void onDismissClicked(Dialog dialog) {
+                                dialog.dismiss();
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Có lỗi khi thêm vào giỏ hàng!", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        viewModel.getProductDetail( id, product -> {
+
+        viewModel.getProductDetail( String.valueOf(id), product -> {
             runOnUiThread(() -> {
                 if (product != null) {
-                    double price = product.getPrice(); // hoặc nếu price là String thì: Double.parseDouble(product.getPrice())
+                    // Lấy giá và định dạng
+                    double price = product.getPrice(); // Nếu getPrice trả về double
+                    // Nếu getPrice trả về String thì: double price = Double.parseDouble(product.getPrice());
                     NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-                    String priceVN = formatter.format(price) + "VNĐ";
+                    String priceVN = formatter.format(price) + " VNĐ";
+
+                    // Set tên sản phẩm
                     binding.productNameTv.setText(product.getName());
-                    binding.productPriceTv.setText( priceVN);
-                    binding.productCategoryTv.setText(product.getCategoryId());
-                    binding.productDsTv.setText(product.getDescription());
                     binding.productNameMainTv.setText(product.getName());
+
+                    // Set giá
+                    binding.productPriceTv.setText(priceVN);
+
+                    // Set nahnx (category)
+                    binding.productCategoryTv.setText("Nhãn hiệu: " + String.valueOf(product.getBrand()));
+
+                    // Set mô tả
+                    binding.productDsTv.setText(product.getDescription());
+
+                    // Set số lượng tồn kho
+                    int stock = product.getStockQuantity();
+                    binding.productStockTv.setText("Kho: " + stock);
+
+                    // Set hình ảnh sản phẩm
                     List<String> images = new ArrayList<>();
                     images.add(product.getImageUrl());
                     binding.imageViewpager.setAdapter(new ImageProductAdapter(images));
-
                     binding.indicator.setViewPager2(binding.imageViewpager);
 
-                    price = product.getPrice();
-                    productImage = product.getImageUrl();
-                    categoryId = product.getCategoryId();
-                    if (false) {
+                    // Disable nút nếu hết hàng
+                    if (stock == 0) {
                         binding.addToBagBtn.setEnabled(false);
                         binding.addToBagBtn.setText("Out of stock");
+                    } else {
+                        binding.addToBagBtn.setEnabled(true);
+                        binding.addToBagBtn.setText("Add to Bag");
                     }
-                    // Load related products
-                    viewModel.getProductsByCategory(token, categoryId, relatedProducts -> {
-                        runOnUiThread(() -> {
-                            if (relatedProducts != null) {
-                                ProductAdapter adapter = new ProductAdapter();
-                                adapter.differ.submitList(relatedProducts); // Nếu bạn port ProductAdapter sang Java, sửa lại cho phù hợp
-                                adapter.setOnItemClickListener(product1 -> {
-                                    Intent intent = new Intent(ProductDetailActivity.this, ProductDetailActivity.class);
-                                    intent.putExtra("id", product1.getId());
-                                    intent.putExtra("token", token);
-                                    intent.putExtra("categoryId", product1.getCategoryId());
-                                    startActivity(intent);
-                                });
-                                binding.relatedProductsRv.setAdapter(adapter);
-                            }
-                        });
-                    });
+
+                    // Lưu lại để dùng khi thêm vào giỏ
+                    this.price = price;
+                    this.productImage = product.getImageUrl();
+                    this.categoryId = String.valueOf(product.getCategoryId());
+
                 }
             });
         });

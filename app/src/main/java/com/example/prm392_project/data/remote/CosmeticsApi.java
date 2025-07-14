@@ -6,6 +6,7 @@ import com.example.prm392_project.data.model.main.cart.CartResponse;
 import com.example.prm392_project.data.model.main.category.Category;
 import com.example.prm392_project.data.model.main.category.CategoryResponse;
 import com.example.prm392_project.data.model.main.order.Order;
+import com.example.prm392_project.data.model.main.order.OrderResponse;
 import com.example.prm392_project.data.model.main.product.Product;
 import com.example.prm392_project.data.model.auth.sign_in.SignInRequest;
 import com.example.prm392_project.data.model.auth.sign_in.SignInResponse;
@@ -36,10 +37,10 @@ public interface CosmeticsApi {
     @GET("/users/checkUserExits/{email}")
     Call<Boolean> checkUserExist(@Path("email") String email);
 
-    @POST("/api/users/signIn")
+    @POST("/api/auth/login")
     Call<SignInResponse> signIn(@Body SignInRequest signInRequest);
 
-    @POST("/api/users/signUp")
+    @POST("/api/auth/register")
     Call<SignUpResponse> signUp(@Body SignUpRequest signUpRequest);
 
     // CATEGORY
@@ -126,9 +127,9 @@ public interface CosmeticsApi {
     );
 
     @POST("/api/orders")
-    Call<Order> createOrder(
-            @Header("Authorization") String token,
-            @Body Order order
+    Call<OrderResponse> createOrder(
+            @Header("Authorization") String bearerToken,
+            @Body Map<String, Object> body
     );
 
     @PATCH("/api/orders/{id}")

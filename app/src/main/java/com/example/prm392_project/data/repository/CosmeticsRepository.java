@@ -10,6 +10,7 @@ import com.example.prm392_project.data.model.main.category.CategoryResponse;
 import com.example.prm392_project.data.model.main.order.Order;
 import com.example.prm392_project.data.model.auth.sign_in.SignInRequest;
 import com.example.prm392_project.data.model.auth.sign_up.SignUpRequest;
+import com.example.prm392_project.data.model.main.order.OrderResponse;
 import com.example.prm392_project.data.model.main.product.Product;
 import com.example.prm392_project.data.model.main.user.User;
 import com.example.prm392_project.data.remote.CosmeticsApi;
@@ -93,8 +94,8 @@ public class CosmeticsRepository {
         return cosmeticsApi.deleteAllCartItemsByUserId(token, userId);
     }
 
-    public retrofit2.Call<?> createOrder(String token, Order order) {
-        return cosmeticsApi.createOrder(token, order);
+    public Call<OrderResponse> createOrder(String token, Map<String, Object> body) {
+        return cosmeticsApi.createOrder( token, body);
     }
 
     public retrofit2.Call<List<Order>> getOrders(String token, String userId) {

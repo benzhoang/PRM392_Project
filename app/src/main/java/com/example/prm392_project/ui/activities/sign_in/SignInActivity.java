@@ -55,23 +55,17 @@ public class SignInActivity extends AppCompatActivity {
                 viewModel.signInUser(email, password, response -> {
                     runOnUiThread(() -> {
                         if (response != null) {
-                            SharedPrefUtils.saveString(this, "id", response.getId());
+                            SharedPrefUtils.saveString(this, "userId", response.getId());
                             SharedPrefUtils.saveString(this, "email", response.getEmail());
-                            SharedPrefUtils.saveString(this, "firstName", response.getFirstName());
-                            SharedPrefUtils.saveString(this, "lastName", response.getLastName());
-                            SharedPrefUtils.saveString(this, "avatar", response.getAvatar());
-                            SharedPrefUtils.saveString(this, "birthDate", response.getBirthDate());
-                            SharedPrefUtils.saveString(this, "address", response.getAddress());
-                            SharedPrefUtils.saveString(this, "phoneNumber", response.getPhoneNumber());
                             SharedPrefUtils.saveString(this, "accessToken", response.getAccessToken());
                             SharedPrefUtils.saveBoolean(this, "isLogin", true);
 
                             PopupDialog.getInstance(this)
                                     .setStyle(Styles.SUCCESS)
-                                    .setHeading("Sign in success!")
-                                    .setDescription("Welcome back to Cosmeticsshop")
+                                    .setHeading("Đăng nhập thành công!")
+                                    .setDescription("Chào mừng tới Cosmeticsshop")
                                     .setCancelable(false)
-                                    .setDismissButtonText("OK")
+                                    .setDismissButtonText("Tiếp tục")
                                     .showDialog(new OnDialogButtonClickListener() {
                                         @Override
                                         public void onDismissClicked(Dialog dialog) {
@@ -82,8 +76,8 @@ public class SignInActivity extends AppCompatActivity {
                                         }
                                     });
                         } else {
-                            binding.passwordEt.setError("Invalid password");
-                            Toast.makeText(this, "Invalid password", Toast.LENGTH_SHORT).show();
+                            binding.passwordEt.setError("Mật khẩu sai hoặc không hợp lệ");
+                            Toast.makeText(this, "Mật khẩu sai hoặc không hợp lệ", Toast.LENGTH_SHORT).show();
                         }
                     });
                 });

@@ -18,6 +18,7 @@ import com.example.prm392_project.ui.activities.splash.SplashViewModel;
 
 @dagger.hilt.android.AndroidEntryPoint
 public class CheckAccountActivity extends AppCompatActivity {
+    private String mode;
     private ActivityCheckAccountBinding binding;
     private SplashViewModel viewModel;
 
@@ -26,6 +27,8 @@ public class CheckAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCheckAccountBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        mode = getIntent().getStringExtra("mode");
 
         View mainView = findViewById(R.id.main);
         if (mainView != null) {
@@ -51,20 +54,14 @@ public class CheckAccountActivity extends AppCompatActivity {
                 return;
             }
 
-            // Hàm checkEmailExits phải dùng interface/callback Java thuần
-            viewModel.checkEmailExits(email, new SplashViewModel.EmailExistsCallback() {
-                @Override
-                public void onResult(boolean isExists) {
-                    Intent intent;
-                    if (isExists) {
-                        intent = new Intent(CheckAccountActivity.this, SignInActivity.class);
-                    } else {
-                        intent = new Intent(CheckAccountActivity.this, SignUpActivity.class);
-                    }
-                    intent.putExtra("email", email);
-                    startActivity(intent);
-                }
-            });
+            Intent intent;
+            if ("login".equals(mode)) {
+                intent = new Intent(CheckAccountActivity.this, SignInActivity.class);
+            } else {
+                intent = new Intent(CheckAccountActivity.this, SignUpActivity.class);
+            }
+            intent.putExtra("email", email);
+            startActivity(intent);
         });
     }
 

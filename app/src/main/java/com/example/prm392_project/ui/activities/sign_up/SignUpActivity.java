@@ -54,34 +54,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         binding.editTv.setOnClickListener(v -> finish());
 
-        binding.dateEt.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            DatePickerDialog datePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-                String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-                binding.dateEt.setText(date);
-            }, 2000, 1, 1);
-            datePicker.show();
-        });
+
 
         binding.createAccountBtn.setOnClickListener(v -> {
             boolean error = false;
             String firstname = binding.firstnameEt.getText().toString().trim();
             String lastname = binding.lastnameEt.getText().toString().trim();
             String password = binding.passwordEt.getText().toString().trim();
-            String address = binding.addressEt.getText().toString().trim();
-            String phoneNumber = binding.phoneEt.getText().toString().trim();
-            String birthDateInput = binding.dateEt.getText().toString().trim();
-            String formattedBirthDate = null;
-            if (!birthDateInput.isEmpty()) {
-                try {
-                    SimpleDateFormat sdfInput = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                    SimpleDateFormat sdfOutput = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    formattedBirthDate = sdfOutput.format(sdfInput.parse(birthDateInput));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    error = true;
-                }
-            }
+
 
             // Validate first name (bạn có thể gọi lại easyvalidation trong Java nếu đã add dependency)
             if (firstname.isEmpty() || firstname.matches(".*\\d.*")) {
@@ -107,59 +87,25 @@ public class SignUpActivity extends AppCompatActivity {
             } else {
                 binding.passwordEt.setError(null);
             }
-            // Validate address
-            if (address.isEmpty() || address.length() < 10) {
-                binding.addressEt.setError("Address must be at least 10 characters");
-                binding.addressEt.requestFocus();
-                error = true;
-            } else {
-                binding.addressEt.setError(null);
-            }
-            // Validate phone number
-            if (phoneNumber.isEmpty() || !phoneNumber.matches("\\d{10,12}")) {
-                binding.phoneEt.setError("Invalid phone number");
-                binding.phoneEt.requestFocus();
-                error = true;
-            } else {
-                binding.phoneEt.setError(null);
-            }
-            // Validate birth date
-            if (birthDateInput.isEmpty()) {
-                binding.dateEt.setError("Birthdate cannot be empty");
-                binding.dateEt.requestFocus();
-                error = true;
-            } else {
-                binding.dateEt.setError(null);
-            }
 
+            String name = firstname + " " + lastname;
             if (error) {
                 return;
             } else {
                 viewModel.signUpUser(
                         email,
                         password,
-                        firstname,
-                        lastname,
-                        formattedBirthDate,
-                        address,
-                        phoneNumber,
-                        response -> {
+                        name,
+                        (response, errorMessage) -> {
                             if (response != null) {
-                                SharedPrefUtils.saveString(this, "id", response.getData().getId());
-                                SharedPrefUtils.saveString(this, "email", response.getData().getEmail());
-                                SharedPrefUtils.saveString(this, "firstName", response.getData().getFirstName());
-                                SharedPrefUtils.saveString(this, "lastName", response.getData().getLastName());
-                                SharedPrefUtils.saveString(this, "birthDate", response.getData().getBirthDate());
-                                SharedPrefUtils.saveString(this, "address", response.getData().getAddress());
-                                SharedPrefUtils.saveString(this, "phoneNumber", response.getData().getPhoneNumber());
-                                SharedPrefUtils.saveString(this, "accessToken", response.getAccessToken());
-                                SharedPrefUtils.saveBoolean(this, "isLogin", true);
+                                SharedPrefUtils.saveString(this, "email", response.getUser().getEmail());
+                                SharedPrefUtils.saveString(this, "name", response.getUser().getName());
 
                                 PopupDialog.getInstance(this)
                                         .setStyle(Styles.SUCCESS)
-                                        .setHeading("Sign up success!")
-                                        .setDescription("Welcome to Cosmeticsshop")
-                                        .setDismissButtonText("OK")
+                                        .setHeading("Đăng kí thành công!")
+                                        .setDescription("Chào mừng tới Cosmeticsshop")
+                                        .setDismissButtonText("Tiếp tục")
                                         .setCancelable(false)
                                         .showDialog(new OnDialogButtonClickListener() {
                                             @Override
@@ -172,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             }
                                         });
                             } else {
-                                Toast.makeText(this, "Error signing up", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
                             }
                         }
                 );

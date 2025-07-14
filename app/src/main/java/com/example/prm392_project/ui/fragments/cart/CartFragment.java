@@ -18,23 +18,26 @@ import com.example.prm392_project.adapter.cart.CartAdapter;
 import com.example.prm392_project.data.model.main.cart.Cart;
 import com.example.prm392_project.databinding.FragmentCartBinding;
 import com.example.prm392_project.ui.activities.checkout.CheckoutActivity;
+import com.example.prm392_project.ui.activities.order.OrderViewModel;
 import com.example.prm392_project.ui.activities.product_detail.ProductDetailActivity;
 import com.example.prm392_project.util.SharedPrefUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class CartFragment extends Fragment {
+    private OrderViewModel orderViewModel;
 
     private FragmentCartBinding binding;
-    private CartViewModel viewModel;
-    private String total = "";
+    private CartAdapter adapter;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCartBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -42,73 +45,159 @@ public class CartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        Log.d("CartFragment", "onViewCreated called");
+        List<CartItem> cartItems = getCartItemsFromPref();
+        Log.d("CartFragment", "Cart items loaded: " + cartItems.size());
+        adapter = new CartAdapter(cartItems, new CartAdapter.CartActionListener() {
+            @Override
+            public void onMinus(CartItem item) {
+                updateCartItemQuantity(item.productId, -1);
+            }
 
-        viewModel = new ViewModelProvider(this).get(CartViewModel.class);
+            @Override
+            public void onPlus(CartItem item) {
+                updateCartItemQuantity(item.productId, 1);
+            }
 
-        String token = SharedPrefUtils.getString(requireContext(), "accessToken", "");
-        String bearerToken = "Bearer " + token;
-        String userId = SharedPrefUtils.getString(requireContext(), "id", "");
+            @Override
+            public void onDelete(CartItem item) {
+                removeCartItem(item.productId);
+            }
 
-        binding.paymentBtn.setOnClickListener(v -> {
-            if (!total.isEmpty()) {
-                try {
-                    if (Double.parseDouble(total) > 0) {
-                        Intent intent = new Intent(requireContext(), CheckoutActivity.class);
-                        intent.putExtra("token", bearerToken);
-                        intent.putExtra("total", total);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(requireContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (NumberFormatException e) {
-                    Toast.makeText(requireContext(), "Invalid total value", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(requireContext(), "Cart is empty", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onItemClick(CartItem item) {
+                // Chuyển sang ProductDetailActivity
+                Intent intent = new Intent(requireContext(), ProductDetailActivity.class);
+                intent.putExtra("id", String.valueOf(item.productId));
+                startActivity(intent);
             }
         });
-
-        viewModel.getAllCarts(bearerToken, userId);
+        binding.cartRv.setAdapter(adapter);
+        loadCartProducts();
     }
 
-    private void handleItemClick(Cart cart, String bearerToken) {
-        Intent intent = new Intent(requireContext(), ProductDetailActivity.class);
-        intent.putExtra("id", cart.getItems().getProduct());
-        intent.putExtra("token", bearerToken);
-        startActivity(intent);
-    }
-
-    private void handleQuantityChange(Cart cart, String bearerToken, String userId, int change) {
-        int newQuantity = cart.getItems().getQuantity() + change;
-        viewModel.updateQuantity(bearerToken, cart.getId(),
-                java.util.Collections.singletonMap("quantity", newQuantity));
-    }
-
-    private void handleItemDeletion(Cart cart, String bearerToken, String userId) {
-        viewModel.deleteCart(bearerToken, cart.getId());
-    }
-
-
-    private void refreshCartList(String bearerToken, String userId) {
-        viewModel.getAllCarts(bearerToken, userId);
-    }
-
-    private void updateUI(List<Cart> carts) {
-        boolean isEmpty = carts.isEmpty();
-        binding.llCartEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        binding.cartRv.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-
-        double totalPrice = 0;
-        for (Cart cart : carts) {
-            totalPrice += cart.getItems().getPrice() * cart.getItems().getQuantity();
+    private List<CartItem> getCartItemsFromPref() {
+        List<CartItem> list = new ArrayList<>();
+        String cartJson = SharedPrefUtils.getString(requireContext(), "cart_items", "[]");
+        try {
+            if (cartJson == null || cartJson.trim().isEmpty()) cartJson = "[]";
+            org.json.JSONArray array = new org.json.JSONArray(cartJson);
+            for (int i = 0; i < array.length(); i++) {
+                org.json.JSONObject obj = array.getJSONObject(i);
+                int productId = obj.getInt("product_id");
+                int quantity = obj.getInt("quantity");
+                list.add(new CartItem(productId, quantity));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        total = String.valueOf(totalPrice);
-        binding.totalPriceTv.setText("$: " + total);
+        return list;
     }
 
+
+    // Cập nhật số lượng
+    private void updateCartItemQuantity(int productId, int delta) {
+        List<CartItem> items = getCartItemsFromPref();
+        boolean changed = false;
+        for (CartItem item : items) {
+            if (item.productId == productId) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    items.remove(item);
+                }
+                changed = true;
+                break;
+            }
+        }
+        if (changed) saveCartItemsToPref(items);
+        adapter.updateData(items);
+        loadCartProducts();
+    }
+
+    // Xóa sản phẩm khỏi giỏ
+    private void removeCartItem(int productId) {
+        List<CartItem> items = getCartItemsFromPref();
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).productId == productId) {
+                items.remove(i);
+                break;
+            }
+        }
+        saveCartItemsToPref(items);
+        adapter.updateData(items);
+        loadCartProducts();
+    }
+
+    private void saveCartItemsToPref(List<CartItem> items) {
+        org.json.JSONArray array = new org.json.JSONArray();
+        for (CartItem item : items) {
+            org.json.JSONObject obj = new org.json.JSONObject();
+            try {
+                obj.put("product_id", item.productId);
+                obj.put("quantity", item.quantity);
+            } catch (Exception ignored) {}
+            array.put(obj);
+        }
+        SharedPrefUtils.saveString(requireContext(), "cart_items", array.toString());
+    }
+
+    // Lấy chi tiết từng sản phẩm bằng API và cập nhật Adapter
+    private void loadCartProducts() {
+        List<CartItem> items = getCartItemsFromPref();
+        adapter.clearProductMap();
+        adapter.updateData(items);
+
+        if (items.isEmpty()) {
+            binding.llCartEmpty.setVisibility(View.VISIBLE);
+            binding.cartRv.setVisibility(View.GONE);
+            binding.totalPriceTv.setText("0 VNĐ");
+            return;
+        }
+
+        final double[] total = {0.0};
+        final int[] loadedCount = {0};
+
+        CartViewModel vm = new ViewModelProvider(this).get(CartViewModel.class);
+
+        for (CartItem item : items) {
+            vm.getProductDetail(String.valueOf(item.productId), product -> {
+                // LUÔN ĐƯA VỀ UI THREAD KHI UPDATE UI!
+                requireActivity().runOnUiThread(() -> {
+                    if (product != null) {
+                        adapter.updateProduct(item.productId, product);
+                        total[0] += product.getPrice() * item.quantity;
+                    }
+                    loadedCount[0]++;
+                    if (loadedCount[0] == items.size()) {
+                        binding.totalPriceTv.setText("" + ((int)total[0]) + "Đ");
+                    }
+                });
+            });
+        }
+
+        binding.llCartEmpty.setVisibility(View.GONE);
+        binding.cartRv.setVisibility(View.VISIBLE);
+    }
+
+
+
+
+    // Model CartItem local
+    public static class CartItem {
+        public int productId;
+        public int quantity;
+
+        public CartItem(int productId, int quantity) {
+            this.productId = productId;
+            this.quantity = quantity;
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 }
+
