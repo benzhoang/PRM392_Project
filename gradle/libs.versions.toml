@@ -10,6 +10,23 @@ constraintlayout = "2.2.1"
 navigationFragment = "2.9.0"
 navigationUi = "2.9.0"
 simpleratingbar = "1.5.1"
+imagepickerVersion = "2.1"
+avvylib = "1.2.0"
+input = "2.3.1"
+glide = "4.16.0"
+loggingInterceptor = "4.12.0"
+kotlinxCoroutinesAndroid = "1.8.0"
+kotlin = "1.9.0"
+retrofit = "2.11.0"
+ksp = "1.9.0-1.0.13"
+#Dagger-Hilt
+hilt = "2.51.1"
+hilt-work = "1.2.0"
+hilt-compose = "1.2.0"
+popupDialog = "1.0.5"
+evVersion = "1.0.4"
+navigationFragmentKtx = "2.9.1"
+navigationUiKtx = "2.9.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -22,7 +39,29 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 simpleratingbar = { module = "com.github.ome450901:SimpleRatingBar", version.ref = "simpleratingbar" }
-
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-work" }
+hilt-work-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt-work" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesAndroid" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+input = { module = "com.maxkeppeler.sheets:input", version.ref = "input" }
+popup-dialog = { module = "com.saadahmedev.popup-dialog:popup-dialog", version.ref = "popupDialog" }
+easyvalidation-core = { module = "com.wajahatkarim:easyvalidation-core", version.ref = "evVersion" }
+easyvalidation-toast = { module = "com.wajahatkarim:easyvalidation-toast", version.ref = "evVersion" }
+avvylib = { module = "xyz.schwaab:avvylib", version.ref = "avvylib" }
+imagepicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "imagepickerVersion" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksps = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
