@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
                                 ProductAdapter productAdapter = new ProductAdapter();
                                 productAdapter.differ.submitList(products);
                                 productAdapter.setOnItemClickListener(product -> {
-                                    intentToProductDetailActivity(String.valueOf(product.getId()), bearerToken, product.getCategoryId());
+                                    intentToProductDetailActivity(product.getId(), bearerToken, product.getCategoryId());
                                 });
                                 binding.productRv.setAdapter(productAdapter);
                             }
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
                                 ProductAdapter productAdapter = new ProductAdapter();
                                 productAdapter.differ.submitList(products);
                                 productAdapter.setOnItemClickListener(product -> {
-                                    intentToProductDetailActivity(String.valueOf(product.getId()), bearerToken, product.getCategoryId());
+                                    intentToProductDetailActivity(product.getId(), bearerToken, product.getCategoryId());
                                 });
                                 binding.productRv.setAdapter(productAdapter);
                             }
@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment {
                     ProductAdapter productAdapter = new ProductAdapter();
                     productAdapter.differ.submitList(products);
                     productAdapter.setOnItemClickListener(product -> {
-                        intentToProductDetailActivity(String.valueOf(product.getId()), bearerToken, product.getCategoryId());
+                        intentToProductDetailActivity(product.getId(), bearerToken, product.getCategoryId());
                     });
                     binding.productRv.setAdapter(productAdapter);
                 }
@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void intentToProductDetailActivity(String id, String bearerToken, String categoryId) {
+    private void intentToProductDetailActivity(int id, String bearerToken, String categoryId) {
         Intent intent = new Intent(requireContext(), ProductDetailActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("token", bearerToken);

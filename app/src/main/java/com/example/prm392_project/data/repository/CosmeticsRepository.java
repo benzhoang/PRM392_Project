@@ -82,13 +82,7 @@ public class CosmeticsRepository {
         return cosmeticsApi.addProductToCart(token, cartRequest);
     }
 
-    public retrofit2.Call<?> updateCart(String token, String id, Map<String, Integer> map) {
-        return cosmeticsApi.updateCartItemQuantity(token, id, map);
-    }
 
-    public retrofit2.Call<?> deleteCart(String token, String id) {
-        return cosmeticsApi.deleteCartItem(token, id);
-    }
 
     public retrofit2.Call<?> deleteAllCart(String token, String userId) {
         return cosmeticsApi.deleteAllCartItemsByUserId(token, userId);

@@ -57,6 +57,7 @@ public class SignInActivity extends AppCompatActivity {
                         if (response != null) {
                             SharedPrefUtils.saveString(this, "userId", response.getId());
                             SharedPrefUtils.saveString(this, "email", response.getEmail());
+                            SharedPrefUtils.saveString(this, "name", response.getUserName());
                             SharedPrefUtils.saveString(this, "accessToken", response.getAccessToken());
                             SharedPrefUtils.saveBoolean(this, "isLogin", true);
 

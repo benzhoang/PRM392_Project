@@ -90,11 +90,10 @@ public class ProfileFragment extends Fragment {
 
         userId = SharedPrefUtils.getString(requireContext(), "id", "");
         token = "Bearer " + SharedPrefUtils.getString(requireContext(), "accessToken", "");
-        String firstName = SharedPrefUtils.getString(requireContext(), "firstName", "");
-        String lastName = SharedPrefUtils.getString(requireContext(), "lastName", "");
+        String name = SharedPrefUtils.getString(requireContext(), "name", "");
         String avatar = SharedPrefUtils.getString(requireContext(), "avatar", "");
 
-        binding.profileNameTv.setText(firstName + " " + lastName);
+        binding.profileNameTv.setText(name);
         Glide.with(this)
                 .load(avatar)
                 .placeholder(R.drawable.ic_user_profile)
@@ -138,16 +137,23 @@ public class ProfileFragment extends Fragment {
                         });
             }
         });
+        final String storeAddress = "123 Nguyễn Văn Cừ, Cần Thơ";
 
-        binding.ordersCv.setOnClickListener(v -> {
-            NavHostFragment.findNavController(ProfileFragment.this)
-                    .navigate(R.id.orderFragment);
+        // 2. Xử lý sự kiện click mở Google Maps
+        binding.storeAddressCv.setOnClickListener(v -> {
+            // Dạng search theo địa chỉ text
+            Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(storeAddress));
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            // Check xem thiết bị có cài Google Maps không
+            if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                startActivity(mapIntent);
+            } else {
+                // Nếu không có Google Maps thì mở intent bình thường
+                startActivity(new Intent(Intent.ACTION_VIEW, gmmIntentUri));
+            }
         });
 
-        binding.settingsCv.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), SettingActivity.class);
-            startActivity(intent);
-        });
     }
 
     private void checkPermissionAndOpenCameraOrGallery() {

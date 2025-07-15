@@ -69,12 +69,36 @@ public class CartFragment extends Fragment {
             public void onItemClick(CartItem item) {
                 // Chuyển sang ProductDetailActivity
                 Intent intent = new Intent(requireContext(), ProductDetailActivity.class);
-                intent.putExtra("id", String.valueOf(item.productId));
+                intent.putExtra("id", item.productId);
                 startActivity(intent);
             }
         });
         binding.cartRv.setAdapter(adapter);
         loadCartProducts();
+        binding.paymentBtn.setOnClickListener(v -> {
+
+            if (cartItems.isEmpty()) {
+                Toast.makeText(requireContext(), "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Tính tổng tiền từ adapter/productMap
+            double total = 0;
+            for (CartItem item : cartItems) {
+                // Lấy product từ adapter.productMap, nếu đã được load (nếu chưa load thì tính bằng 0)
+                if (adapter.getProductMap().containsKey(item.productId)) {
+                    total += adapter.getProductMap().get(item.productId).getPrice() * item.quantity;
+                }
+            }
+
+            // Chuyển sang màn hình thanh toán (CheckoutActivity, hoặc OrderActivity...)
+            Intent intent = new Intent(requireContext(), CheckoutActivity.class); // hoặc OrderActivity nếu bạn dùng activity này để nhập thông tin giao hàng
+            // Truyền tổng tiền và danh sách sản phẩm (tùy bạn xử lý bên Activity, ở đây truyền tổng tiền là đủ)
+            intent.putExtra("total", total);
+            // Nếu muốn truyền cart chi tiết: có thể serialize thành JSON rồi truyền, hoặc chỉ truyền lại id và quantity, hoặc fetch lại trong Activity sau cũng được
+
+            startActivity(intent);
+        });
     }
 
     private List<CartItem> getCartItemsFromPref() {

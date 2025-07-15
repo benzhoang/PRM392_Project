@@ -127,6 +127,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         viewModel.getProductDetail( String.valueOf(id), product -> {
             runOnUiThread(() -> {
+                Log.d("ProductDetailActivity", "product: " + (product == null ? "null" : product.getName()));
                 if (product != null) {
                     // Lấy giá và định dạng
                     double price = product.getPrice(); // Nếu getPrice trả về double
@@ -160,10 +161,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                     // Disable nút nếu hết hàng
                     if (stock == 0) {
                         binding.addToBagBtn.setEnabled(false);
-                        binding.addToBagBtn.setText("Out of stock");
+                        binding.addToBagBtn.setText("Hết hàng");
                     } else {
                         binding.addToBagBtn.setEnabled(true);
-                        binding.addToBagBtn.setText("Add to Bag");
+                        binding.addToBagBtn.setText("Thêm vào giò hàng");
                     }
 
                     // Lưu lại để dùng khi thêm vào giỏ

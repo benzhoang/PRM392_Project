@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="Check out" />
+        app:title="Thanh toán" />
 
     <TextView
         android:id="@+id/tvShippingAddress"
@@ -25,24 +25,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Shipping Address"
+        android:text="Địa chỉ giao hàng"
         android:textColor="@color/colorBlack"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:text="(Default)"
-        android:textColor="@color/colorGrey"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvShippingAddress"
-        app:layout_constraintStart_toEndOf="@+id/tvShippingAddress"
-        app:layout_constraintTop_toTopOf="@+id/tvShippingAddress" />
+
 
     <ImageView
         android:id="@+id/edit_address_iv"
@@ -82,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Contact Information"
+        android:text="Thông tin liên lạc"
         android:textColor="@color/colorBlack"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -90,48 +80,14 @@
         app:layout_constraintTop_toBottomOf="@id/location_iv" />
 
     <ImageView
-        android:id="@+id/email_iv"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_border"
-        android:padding="6dp"
-        android:src="@drawable/ic_email"
-        app:layout_constraintStart_toStartOf="@id/tvContactInformation"
-        app:layout_constraintTop_toBottomOf="@id/tvContactInformation" />
-
-    <TextView
-        android:id="@+id/email_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:padding="4dp"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/email_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/email_iv"
-        app:layout_constraintTop_toTopOf="@id/email_iv" />
-
-    <ImageView
-        android:id="@+id/edit_email_iv"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_edit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/email_iv" />
-
-    <ImageView
         android:id="@+id/phone_iv"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_border"
         android:padding="6dp"
         android:src="@drawable/ic_telephone"
-        app:layout_constraintStart_toStartOf="@id/email_iv"
-        app:layout_constraintTop_toBottomOf="@id/email_iv" />
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="272dp" />
 
     <TextView
         android:id="@+id/phone_tv"
@@ -177,7 +133,7 @@
                 android:id="@+id/tvOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Order Summary"
+                android:text="Đơn haàng bao gồm"
                 android:textColor="@color/colorBlack"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -197,7 +153,7 @@
                 android:id="@+id/tvShippingFee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shipping Fee:"
+                android:text="Phí ship(10%):"
                 android:textColor="@color/colorGrey"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -216,7 +172,7 @@
                 android:id="@+id/tvTotalQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price:"
+                android:text="Giá:"
                 android:textColor="@color/colorGrey"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -236,7 +192,7 @@
                 android:id="@+id/tvTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total:"
+                android:text="Thành tiền:"
                 android:textColor="@color/colorGrey"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -262,7 +218,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/black_button"
         android:paddingHorizontal="16dp"
-        android:text="Continue to Payment"
+        android:text="Tiếp tục thanh toán"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
