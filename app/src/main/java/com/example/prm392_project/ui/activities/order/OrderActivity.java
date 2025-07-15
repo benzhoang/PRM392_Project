@@ -37,7 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class OrderActivity extends AppCompatActivity {
 
     private ActivityOrderBinding binding;
-    private OrderViewModel viewModel;
+    private OrderViewModel orderViewModel;
     private CartViewModel cartViewModel;
     private String paymentMethod = "Cash";
 
@@ -53,24 +53,22 @@ public class OrderActivity extends AppCompatActivity {
             return insets;
         });
 
-        viewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        // ViewModel Hilt
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
-        String totalStr = getIntent().getStringExtra("total");
-        String email = getIntent().getStringExtra("email");
+        // Lấy dữ liệu từ Intent
+        double total = getIntent().getDoubleExtra("total", 0);
         String phoneNumber = getIntent().getStringExtra("phoneNumber");
         String token = getIntent().getStringExtra("token");
         String address = getIntent().getStringExtra("address");
-        String userId = SharedPrefUtils.getString(this, "id", "");
+        String userId = SharedPrefUtils.getString(this, "user_id", "");
+        Log.d("OrderActivity", "total: " + total);
+        Log.d("OrderActivity", "phone: " + phoneNumber);
+        Log.d("OrderActivity", "address: " + address);
 
-        double total = totalStr != null ? Double.parseDouble(totalStr) : 0;
 
-        // Ngày đặt
-        LocalDate now = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String dateStr = now.format(formatter);
-
-        // Radio buttons
+        // Radio buttons chọn payment method
         binding.rdCash.setChecked(true);
         binding.rdCc.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -79,7 +77,6 @@ public class OrderActivity extends AppCompatActivity {
                 binding.rdPaypal.setChecked(false);
             }
         });
-
         binding.rdCash.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 paymentMethod = "Cash";
@@ -87,7 +84,6 @@ public class OrderActivity extends AppCompatActivity {
                 binding.rdPaypal.setChecked(false);
             }
         });
-
         binding.rdPaypal.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 paymentMethod = "Paypal";
@@ -96,10 +92,61 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
-        // Checkout button
+        // Đặt hàng
         binding.btnNext.setOnClickListener(v -> {
+            // Lấy danh sách cart từ local
+            List<CartViewModel.CartItemLocal> cartItems = cartViewModel.getCartList(this);
 
+            if (cartItems == null || cartItems.isEmpty()) {
+                Toast.makeText(this, "Cart is empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (userId == null || userId.trim().isEmpty() || token == null || token.trim().isEmpty()) {
+                Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            // Chuẩn bị orderItems cho API
+            List<Map<String, Object>> orderItems = new ArrayList<>();
+            for (CartViewModel.CartItemLocal item : cartItems) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("product_id", item.productId);
+                map.put("quantity", item.quantity);
+                orderItems.add(map);
+            }
+            Map<String, Object> body = new HashMap<>();
+            body.put("user_id", userId);
+            body.put("payment_method", paymentMethod);
+            body.put("orderItems", orderItems);
+
+            binding.btnNext.setEnabled(false);
+
+            // Gọi API tạo order
+            orderViewModel.createOrder(token, body, orderResponse -> {
+                runOnUiThread(() -> {
+                    binding.btnNext.setEnabled(true);
+                    if (orderResponse != null) {
+                        // Xóa cart local
+                        cartViewModel.saveCartList(this, new ArrayList<>());
+                        PopupDialog.getInstance(OrderActivity.this)
+                                .setStyle(Styles.SUCCESS)
+                                .setHeading("Order created successfully!")
+                                .setDescription("Thanks for your purchase")
+                                .setDismissButtonText("OK")
+                                .setCancelable(false)
+                                .showDialog(new OnDialogButtonClickListener() {
+                                    @Override
+                                    public void onDismissClicked(Dialog dialog) {
+                                        dialog.dismiss();
+
+                                        finish();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(OrderActivity.this, "Error creating order", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
         });
     }
 }

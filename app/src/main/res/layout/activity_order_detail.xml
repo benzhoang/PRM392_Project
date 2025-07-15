@@ -200,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Payment Method"
+                        android:text="Chọn phương thức thanh toán"
                         android:textAlignment="textStart"
                         android:textColor="@color/static_grey"
                         android:textSize="20sp" />
@@ -210,7 +210,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Cash on Delivery"
+                        android:text="Thanh toán khi nhận hàng"
                         android:textAlignment="textEnd"
                         android:textColor="@color/static_grey"
                         android:textSize="20sp" />

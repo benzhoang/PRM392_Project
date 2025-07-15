@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="Payment method" />
+        app:title="Chọn phương thức thanh toán" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_cash"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
-                android:text="Cash on Delivery"
+                android:text="Thanh toán khi nhận hàng"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
 
@@ -124,7 +124,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/black_button"
-        android:text="Confirm Order"
+        android:text="Xác nhận"
         android:textAllCaps="false"
         android:textSize="18sp"
         android:textStyle="bold"

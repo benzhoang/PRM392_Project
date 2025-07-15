@@ -67,6 +67,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void clearProductMap() {
         productMap.clear();
     }
+    public Map<Integer, Product> getProductMap() {
+        return productMap;
+    }
 
     @NonNull
     @Override

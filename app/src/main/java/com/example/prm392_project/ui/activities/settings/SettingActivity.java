@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.prm392_project.R;
 import com.example.prm392_project.databinding.ActivitySettingBinding;
-import com.example.prm392_project.ui.activities.term_of_user.TermOfUserActivity;
 
 public class SettingActivity extends AppCompatActivity {
     private ActivitySettingBinding binding;
@@ -30,9 +29,5 @@ public class SettingActivity extends AppCompatActivity {
             return insets;
         });
 
-        binding.cvTermOfUser.setOnClickListener(v -> {
-            Intent intent = new Intent(this, TermOfUserActivity.class);
-            startActivity(intent);
-        });
     }
 }

@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/Cosmetic_image"
+            android:id="@+id/CosmeticImage"
             android:layout_width="170dp"
             android:layout_height="170dp"
             android:background="@drawable/product_image_background"
@@ -33,7 +33,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/Cosmetic_image" />
+            app:layout_constraintTop_toBottomOf="@id/CosmeticImage" />
 
         <TextView
             android:id="@+id/Cosmetic_category"
